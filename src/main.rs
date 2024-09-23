@@ -51,12 +51,10 @@ async fn save_to_mongodb(products: &std::collections::HashMap<String, Product>, 
     let database = client.database("skyblock");
     let collection: mongodb::Collection<Document> = database.collection("bazaar");
 
-    // Zamanı al
     let current_time = Utc::now();
     let bson_current_time = BsonDateTime::from_system_time(current_time.into());
 
     for product in products.values() {
-        // Eğer buy_summary ve sell_summary boşsa veritabanına ekleme
         if product.buy_summary.is_empty() && product.sell_summary.is_empty() {
             continue;
         }
@@ -82,7 +80,6 @@ async fn save_to_mongodb(products: &std::collections::HashMap<String, Product>, 
             "timestamp": bson_current_time,
         };
 
-        // Veritabanına ekle
         collection.insert_one(document, None).await?;
     }
 
